@@ -10,8 +10,10 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import firebase from 'react-native-firebase';
+import { createStackNavigator, createAppContainer } from "react-navigation";
 
 const ref = firebase.firestore().collection('refunme').doc('qxNhLWm7pdzKAKu83cfQ');
+
 
 type Props = {};
 class App extends Component<Props> {
@@ -92,4 +94,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+
+const AppNavigator = createStackNavigator({
+  Home: {
+    screen: App
+  }
+});
+export default createAppContainer(AppNavigator);
+//export default App;
