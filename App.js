@@ -12,6 +12,7 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import firebase from 'react-native-firebase';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import { MKButton } from 'react-native-material-kit';
+import { Appbar } from 'react-native-paper';
 
 const ref = firebase.firestore().collection('refunme').doc('qxNhLWm7pdzKAKu83cfQ');
 
@@ -26,15 +27,26 @@ class App extends Component<Props> {
   }
   
   render() {
-    const ColoredRaisedButton = MKButton.coloredButton()
-    .withText('BUTTON')
-    .withOnPress(() => {
-      console.log("Hi, it's a colored button!");
-    })
-    .build();
     return (
       <View style={styles.container}>
-        <ColoredRaisedButton />
+      <Text style={{ color:"#9BC73C", fontSize: 18, textAlign:"center", 
+      ...Platform.select({
+        ios: {
+          fontFamily: "Sukhumvit Set",
+        },
+        android: {
+          fontFamily: "sukhumvitset_text",
+        },
+      }),
+      
+        }}>เปิดประกาศขายเลือก REFUN MAN รับซื้อ</Text>
+            
+      <Appbar style={styles.bottom}>
+      <Appbar.Action icon="archive" onPress={() => console.log('Pressed archive')} />
+      <Appbar.Action icon="mail" onPress={() => console.log('Pressed mail')} />
+      <Appbar.Action icon="label" onPress={() => console.log('Pressed label')} />
+      <Appbar.Action icon="delete" onPress={() => console.log('Pressed delete')} />
+    </Appbar>
       </View>
     );
   }
@@ -59,6 +71,12 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+  },
+  bottom: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 });
 
