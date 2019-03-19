@@ -11,6 +11,7 @@ import {Platform, StyleSheet, Text, View} from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import firebase from 'react-native-firebase';
 import { createStackNavigator, createAppContainer } from "react-navigation";
+import { MKButton } from 'react-native-material-kit';
 
 const ref = firebase.firestore().collection('refunme').doc('qxNhLWm7pdzKAKu83cfQ');
 
@@ -21,52 +22,19 @@ class App extends Component<Props> {
     super();
     this.state = {};
   }
-
-
   async componentDidMount() {
-
-    firebase.firestore().runTransaction(async transaction => {
-      const doc = await transaction.get(ref);
-  
-      // if it does not exist set the population to one
-      if (!doc.exists) {
-        transaction.set(ref, { status: 1 });
-        // return the new value so we know what the new population is
-        return 1;
-      }
-  
-      // exists already so lets increment it + 1
-      const newPopulation = doc.data().status + 1;
-  
-      transaction.update(ref, {
-        status: newPopulation,
-      });
-  
-      // return the new value so we know what the new population is
-      return newPopulation;
-    }).then(newPopulation => {
-      console.log(
-        `Transaction successfully committed and new population is '${newPopulation}'.`
-      );
-    })
-    .catch(error => {
-      console.log('Transaction failed: ', error);
-    });
   }
   
   render() {
+    const ColoredRaisedButton = MKButton.coloredButton()
+    .withText('BUTTON')
+    .withOnPress(() => {
+      console.log("Hi, it's a colored button!");
+    })
+    .build();
     return (
       <View style={styles.container}>
-        <MapView
-          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-          region={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121,
-          }}
-          style={styles.map}
-        />
+        <ColoredRaisedButton />
       </View>
     );
   }
