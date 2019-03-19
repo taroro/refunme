@@ -28,16 +28,16 @@ class App extends Component<Props> {
   
       // if it does not exist set the population to one
       if (!doc.exists) {
-        transaction.set(ref, { population: 1 });
+        transaction.set(ref, { status: 1 });
         // return the new value so we know what the new population is
         return 1;
       }
   
       // exists already so lets increment it + 1
-      const newPopulation = doc.data().population + 1;
+      const newPopulation = doc.data().status + 1;
   
       transaction.update(ref, {
-        population: newPopulation,
+        status: newPopulation,
       });
   
       // return the new value so we know what the new population is
