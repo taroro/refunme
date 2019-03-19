@@ -17,8 +17,7 @@ import { Appbar } from 'react-native-paper';
 const ref = firebase.firestore().collection('refunme').doc('qxNhLWm7pdzKAKu83cfQ');
 
 
-type Props = {};
-class App extends Component<Props> {
+class App extends Component {
   constructor() {
     super();
     this.state = {};
