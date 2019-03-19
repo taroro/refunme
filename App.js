@@ -9,16 +9,49 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import firebase from 'react-native-firebase';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+const ref = firebase.firestore().collection('refunme').doc('qxNhLWm7pdzKAKu83cfQ');
 
 type Props = {};
-export default class App extends Component<Props> {
+class App extends Component<Props> {
+  constructor() {
+    super();
+    this.state = {};
+  }
+
+
+  async componentDidMount() {
+
+    firebase.firestore().runTransaction(async transaction => {
+      const doc = await transaction.get(ref);
+  
+      // if it does not exist set the population to one
+      if (!doc.exists) {
+        transaction.set(ref, { population: 1 });
+        // return the new value so we know what the new population is
+        return 1;
+      }
+  
+      // exists already so lets increment it + 1
+      const newPopulation = doc.data().population + 1;
+  
+      transaction.update(ref, {
+        population: newPopulation,
+      });
+  
+      // return the new value so we know what the new population is
+      return newPopulation;
+    }).then(newPopulation => {
+      console.log(
+        `Transaction successfully committed and new population is '${newPopulation}'.`
+      );
+    })
+    .catch(error => {
+      console.log('Transaction failed: ', error);
+    });
+  }
+  
   render() {
     return (
       <View style={styles.container}>
@@ -58,3 +91,5 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
 });
+
+export default App;
