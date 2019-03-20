@@ -1,21 +1,10 @@
 import React, {Component} from 'react';
-import { 
-  Text, 
-  View, 
-  ScrollView, 
-  SafeAreaView, 
-  Image, 
-  ImageBackground, 
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
-import { 
-  Button, 
-  RadioButton, 
-  Divider,
-} from 'react-native-paper';
+import {Text, View, ScrollView, SafeAreaView, Image, ImageBackground, TouchableOpacity} from 'react-native';
+import {Button, RadioButton, Divider} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import {Actions} from 'react-native-router-flux';
+import DateTimePicker from 'react-native-modal-datetime-picker';
+import moment from 'moment'
 // Custom Components
 import theme from '../styles/theme.style';
 import styles from '../styles/component.style';
@@ -29,35 +18,42 @@ class Post extends Component {
       checked:'fast',
       latitude:'0.00000',
       longitude:'0.00000',
+      isDateTimePickerVisible: false,
+      chosenDate:'วว/ดด/ปป'
     };
   }
 
-  goToHome = () => { Actions.home() }
-  goToStep2 = () => { }
-  goToPinMap = () => { Actions.pinmap({onPop: this.BacktoFirstPage.bind(this)}) }
-  gotoChooseDate = () => { }
-
-  BacktoFirstPage(location){
+  _goToHome = () => { Actions.home() }
+  _goToStep2 = () => { }
+  _goToPinMap = () => { Actions.pinmap({onPop: this._backFromPinMap.bind(this)}) }
+  _backFromPinMap(location){
     this.setState({
       latitude: location.latitude,
       longitude: location.longitude,
-      checked: this.state.checked
+      checked: this.state.checked,
+      isDateTimePickerVisible: false,
     });
   }
+  _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
+  _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+  _handleDatePicked = (date) => {
+    this.setState({
+      chosenDate: moment(date).format('DD/MM/YYYY HH:mm')
+    })
+
+    this._hideDateTimePicker();
+  };
 
   render() {
     const checked = this.state.checked;
     const latitude = this.state.latitude;
     const longitude = this.state.longitude;
+    const chosenDate = this.state.chosenDate;
 
     return (
       <SafeAreaView style={[styles.container]} forceInset={{top:'always'}}>
         <NavBarRefun title='ประกาศขาย' action='home' />
-        <View style={{ 
-          alignItems:'stretch', 
-          flexDirection:'column', 
-          justifyContent:'flex-start', 
-          width:'100%',}}>
+        <View style={{alignItems:'stretch', flexDirection:'column', justifyContent:'flex-start', width:'100%',}}>
           <View style={{ 
             alignItems:'center', 
             backgroundColor:theme.BACKGROUND_SECONDARY_COLOR,
@@ -128,9 +124,21 @@ class Post extends Component {
                                 />
                             </View>
                             <View style={{justifyContent:'center', flex:1, paddingRight:10}}>
-                                <TouchableOpacity onPress={this.gotoChooseDate} >
-                                    <TextBoxDisabled title='วว/ดด/ปป' />
+                                <TouchableOpacity onPress={this._showDateTimePicker} >
+                                    <TextBoxDisabled title={chosenDate} />
                                 </TouchableOpacity>
+                                <DateTimePicker
+                                  isVisible={this.state.isDateTimePickerVisible}
+                                  onConfirm={this._handleDatePicked}
+                                  onCancel={this._hideDateTimePicker}
+                                  datePickerModeAndroid='spinner'
+                                  titleIOS='เลือกวันที่สะดวก'
+                                  mode='datetime'
+                                  minimumDate={new Date()}
+                                  cancelTextIOS='ยกเลิก'
+                                  confirmTextIOS='ตกลง'
+                                  is24Hour={false}
+                                />
                             </View>
                         </View>
                     </View>
@@ -151,14 +159,14 @@ class Post extends Component {
                                 />
                             </View>
                             <View style={{justifyContent:'center', flex:1, paddingRight:10}}>
-                                <TouchableOpacity onPress={this.goToPinMap} >
+                                <TouchableOpacity onPress={this._goToPinMap} >
                                     <TextBoxDisabled title={latitude+', '+longitude} />
                                 </TouchableOpacity>
                             </View>
                         </View>
                     </View>
                     <View style={{width:"100%", height:150}}>
-                        <TouchableOpacity onPress={this.goToPinMap} >
+                        <TouchableOpacity onPress={this._goToPinMap} >
                             <ImageBackground 
                                 source={require('../assets/images/mapmockup.png')} 
                                 style={{width:'100%', height:150, justifyContent:'center', alignItems:'center'}} >
@@ -176,7 +184,7 @@ class Post extends Component {
             </View>
           </ScrollView>
           <View style={{marginTop:10, marginLeft: 15, marginRight: 15, marginBottom:10}}>
-            <Button mode="contained" color="#9BC73C" dark={true} onPress={this.goToStep2}>
+            <Button mode="contained" color="#9BC73C" dark={true} onPress={this._goToStep2}>
               <Text style={{fontSize: 18, textAlign:"center", fontFamily: theme.FONT_FAMILY, width:"80%" }}>ต่อไป</Text>
             </Button>
           </View>
