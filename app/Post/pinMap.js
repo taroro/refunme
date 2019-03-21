@@ -1,27 +1,9 @@
-import React, { Component } from 'react';
-import { 
-  Text, 
-  View, 
-  ScrollView, 
-  SafeAreaView, 
-  Image, 
-  ImageBackground, 
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
-
-//import firebase from 'react-native-firebase';
-import { 
-  Button, 
-  RadioButton, 
-  Divider,
-} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import React, {Component} from 'react';
+import {Text, View, SafeAreaView} from 'react-native';
+import {Button} from 'react-native-paper';
 import { Actions } from 'react-native-router-flux';
 import theme from '../styles/theme.style';
 import styles from '../styles/component.style';
-import NavBarRefun from '../components/NavBarRefun';
-import TextBoxDisabled from '../components/TextBoxDisabled';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 export default class PinMap extends Component {

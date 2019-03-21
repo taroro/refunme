@@ -24,7 +24,7 @@ class Post extends Component {
   }
 
   _goToHome = () => { Actions.home() }
-  _goToStep2 = () => { }
+  _goToStep2 = () => { Actions.chooseimage() }
   _goToPinMap = () => { Actions.pinmap({onPop: this._backFromPinMap.bind(this)}) }
   _backFromPinMap(location){
     this.setState({
