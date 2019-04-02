@@ -13,7 +13,7 @@ export default class Home extends Component {
   }
 
   goToPost = () => {
-    Actions.post()
+    Actions.firststep()
   }
 
   async componentDidMount() {
