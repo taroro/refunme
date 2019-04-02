@@ -64,29 +64,30 @@ export default class Step1 extends Component {
 
   render() {
     return (
-      <SafeAreaView style={[styles.container]} forceInset={{top:'always'}}>
+      <SafeAreaView style={[styles.container]} forceInset={{top: 'always'}}>
         <NavBarRefun title='ประกาศขาย' action='home' />
-        <View style={{alignItems:'stretch', flexDirection:'column', justifyContent:'flex-start', width:'100%',}}>
+        <View style={{alignItems: 'stretch', flexDirection: 'column', justifyContent: 'flex-start', width: '100%'}}>
           <View style={{ 
-            alignItems:'center', 
-            backgroundColor:theme.BACKGROUND_SECONDARY_COLOR,
-            paddingBottom:5,  
-            paddingTop:5, 
-            width:'100%',}}>
+            alignItems: 'center', 
+            backgroundColor: theme.BACKGROUND_SECONDARY_COLOR,
+            paddingBottom: 5,  
+            paddingTop: 5, 
+            width:'100%'
+          }}>
             <Image source={require('../assets/images/steps01.png')} />
           </View>
         </View>
-        <View style={{flex:1}} >
+        <View style={{flex: 1}} >
           <ScrollView>
-            <View style={{alignItems:'stretch', flex:1, flexDirection:'column', justifyContent:'flex-start', width:'100%',}}>
+            <View style={{alignItems: 'stretch', flex: 1, flexDirection: 'column', justifyContent: 'flex-start', width: '100%'}}>
               <PostTypeSelect _updatePostTypeToParent={this._updatePostType.bind(this)} />
               <DateTimeSelect _updateDateTimeToParent={this._updateDateTime.bind(this)} />
               <LocationSelect _updateLocationToParent={this._updateLocation.bind(this)} />
             </View>
           </ScrollView>
-          <View style={{marginTop:10, marginLeft: 15, marginRight: 15, marginBottom:10}}>
+          <View style={{marginTop: 10, marginLeft: 15, marginRight: 15, marginBottom: 10}}>
             <Button mode="contained" color="#9BC73C" dark={true} onPress={this._goToSecondStep}>
-              <Text style={{fontSize: 18, textAlign:"center", fontFamily: theme.FONT_FAMILY, width:"80%" }}>ต่อไป</Text>
+              <Text style={{fontSize: 18, textAlign: "center", fontFamily: theme.FONT_FAMILY, width: "80%" }}>ต่อไป</Text>
             </Button>
           </View>
         </View>

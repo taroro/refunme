@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import {Text, View, SafeAreaView, Image, ScrollView} from 'react-native';
 import {Button, Divider} from 'react-native-paper';
 import {Actions} from 'react-native-router-flux';
-import firebase from 'react-native-firebase'
-import moment from 'moment'
+import firebase from 'react-native-firebase';
+import moment from 'moment';
 import theme from '../styles/theme.style';
 import styles from '../styles/component.style';
 import NavBarRefun from '../components/NavBarRefun';
@@ -18,13 +18,27 @@ export default class Step2 extends Component {
       items: [],
       loading: false
     };
-    console.warn(props);
+  }
+
+  _uploadImage(docRef, index, uri, mime = 'image/jpg') {
+    return new Promise((resolve, reject) => {
+      const imageRef = firebase.storage().ref('photos/'+docRef.id+'/').child('image'+index.toString()+'.jpg')
+      imageRef.put(uri, {contentType: mime})
+      .then(() => { return imageRef.getDownloadURL(); })
+      .then((url) => {
+        resolve(url);
+        docRef.collection('photos').add({
+          title: 'thumb_image'+index.toString()+'.jpg',
+          url: url
+        });
+      })
+      .catch((error) => { reject(error); });
+    })
   }
 
   _goToLastStep = e => {
-    e.preventDefault();
+    /*e.preventDefault();
     const db = firebase.firestore();
-    const storage = firebase.storage();
     db.settings({
       timestampsInSnapshots: true
     });
@@ -37,7 +51,6 @@ export default class Step2 extends Component {
       post_datetime: moment(new Date()).format('DD/MM/YYYY HH:mm'), 
       status: 0
     }).then((docRef) => {
-      console.warn(this.state.items);
       this.state.items.map((item, key) => {
         docRef.collection("items").add({
           cate_id: item.itemData.mainCate,
@@ -47,46 +60,49 @@ export default class Step2 extends Component {
           unit: item.itemData.unit
         })
       })
-    });
+      this.state.photos.map((item, key) => {
+        this._uploadImage(docRef, key, item.uri.toString())
+      })
+    });*/
   };
 
   _updatePhotoData = (photos) => {
     this.setState({
       photos: photos,
       loading: true
-    }, () => { this._deLoading() })
+    }, () => { this._deLoading(); });
   }
 
   _updateItemData = (items) => {
     this.setState({
       items: items,
       loading: true
-    }, () => { this._deLoading() })
+    }, () => { this._deLoading(); });
   }
 
   _deLoading = () => {
     this.setState({
       loading: false
-    })
+    });
   }
 
   render() {
     return (
-      <SafeAreaView style={[styles.container]} forceInset={{top:"always"}}>
+      <SafeAreaView style={[styles.container]} forceInset={{top: "always"}}>
         <NavBarRefun title="ประกาศขาย" action="home" />
         <View style={[styles.postContainer]}>
           <View style={[styles.postStep]}>
             <Image source={require("../assets/images/steps02.png")} />
           </View>
         </View>
-        <View style={{flex:1}}>
+        <View style={{flex: 1}}>
           <ScrollView>
             <PhotoSelect _updatePhotoDataToParent={this._updatePhotoData.bind(this)} />
             <ItemList _updateItemDataToParent={this._updateItemData.bind(this)} />
           </ScrollView>
-          <View style={{marginTop:10, marginLeft:15, marginRight:15, marginBottom:10}}>
+          <View style={{marginTop: 10, marginLeft: 15, marginRight: 15, marginBottom: 10}}>
             <Button mode="contained" color={theme.PRIMARY_COLOR} dark={true} onPress={this._goToLastStep}>
-              <Text style={{fontSize:18, textAlign:"center", fontFamily:theme.FONT_FAMILY, width: "80%"}}>ต่อไป</Text>
+              <Text style={{fontSize: 18, textAlign: "center", fontFamily: theme.FONT_FAMILY, width: "80%"}}>ต่อไป</Text>
             </Button>
           </View>
         </View>

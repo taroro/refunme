@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Text, View, SafeAreaView, ScrollView, TouchableOpacity} from 'react-native';
-import firebase from 'react-native-firebase'
+import firebase from 'react-native-firebase';
 import {Actions} from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import theme from '../styles/theme.style';
@@ -44,7 +44,7 @@ export default class CategorySelect extends Component {
   _onCollectionUpdate = (querySnapshot) => {
     const categories = [];
     querySnapshot.forEach((doc) => {
-      const { name_th, icon } = doc.data();
+      const {name_th, icon} = doc.data();
       categories.push({
         key: doc.id,
         doc,
@@ -61,7 +61,7 @@ export default class CategorySelect extends Component {
   _onSubCollectionUpdate = (querySnapshot) => {
     const subCategories = [];
     querySnapshot.forEach((doc) => {
-      const { name_th } = doc.data();
+      const {name_th} = doc.data();
       subCategories.push({
         key: doc.id,
         doc,
@@ -84,7 +84,7 @@ export default class CategorySelect extends Component {
   render() {
     const selectedCategory = this.state.selectedCategory;
 
-    if (this.state.loading) {
+    if(this.state.loading) {
       return null; 
     }
 
@@ -101,60 +101,60 @@ export default class CategorySelect extends Component {
         <TouchableOpacity onPress={() => this._getSubCate(item.key)} key={key}>
           <View>
             <View style={{
-              backgroundColor:theme.BACKGROUND_SECONDARY_COLOR,
+              backgroundColor: theme.BACKGROUND_SECONDARY_COLOR,
               width: 60,
               height: 80,
               justifyContent: "center",
               alignItems: "center",
-              marginLeft:5,
-              marginRight:5,
+              marginLeft: 5,
+              marginRight: 5,
             }}>
               <Icon
                 name={item.icon}
                 size={35}
                 backgroundColor={theme.COLOR_WHITE}
-                color={selectedCategory === item.key ? theme.PRIMARY_COLOR : theme.SECONDARY_COLOR} />
+                color={selectedCategory===item.key?theme.PRIMARY_COLOR:theme.SECONDARY_COLOR} />
               <Text style={[styles.textTiny]}>{item.title}</Text>
             </View>
-            <View style={{borderLeftWidth:1, borderLeftColor:theme.FONT_PRIMARY_COLOR}} />
+            <View style={{borderLeftWidth: 1, borderLeftColor: theme.FONT_PRIMARY_COLOR}} />
           </View>
         </TouchableOpacity>
       );
     });
 
     return (
-      <SafeAreaView style={[styles.container]} forceInset={{top:"always"}}>
+      <SafeAreaView style={[styles.container]} forceInset={{top: "always"}}>
         <NavBarRefun title="ประกาศขาย" action="home" />
         <View style={[styles.postContainer]}>
           <View style={[styles.postStep]}>
-            <ScrollView style={{height:80, width:"100%", backgroundColor:theme.BACKGROUND_SECONDARY_COLOR, padding:5}} horizontal >
+            <ScrollView style={{height: 80, width: "100%", backgroundColor: theme.BACKGROUND_SECONDARY_COLOR, padding: 5}} horizontal >
               <TouchableOpacity onPress={() => this._getSubCate("fav", )} key="fav">
                 <View>
                   <View style={{
-                    backgroundColor:theme.BACKGROUND_SECONDARY_COLOR,
+                    backgroundColor: theme.BACKGROUND_SECONDARY_COLOR,
                     width: 80,
                     height: 80,
                     justifyContent: "center",
                     alignItems: "center",
-                    marginLeft:5,
-                    marginRight:5,
+                    marginLeft: 5,
+                    marginRight: 5,
                   }}>
                     <Icon
                       name="star"
                       size={35}
                       backgroundColor={theme.COLOR_WHITE}
-                      color={selectedCategory === "fav" ? theme.PRIMARY_COLOR : theme.SECONDARY_COLOR} />
+                      color={selectedCategory==="fav"?theme.PRIMARY_COLOR:theme.SECONDARY_COLOR} />
                     <Text style={[styles.textTiny]}>รายการโปรด</Text>
                   </View>
-                  <View style={{borderLeftWidth:1, borderLeftColor:theme.FONT_PRIMARY_COLOR}} />
+                  <View style={{borderLeftWidth: 1, borderLeftColor: theme.FONT_PRIMARY_COLOR}} />
                 </View>
               </TouchableOpacity>
               {mainCateDisplayArray}
             </ScrollView>
           </View>
         </View>
-        <View style={{flex:1}}>
-          <ScrollView style={{flex:1}}>
+        <View style={{flex: 1}}>
+          <ScrollView style={{flex: 1}}>
             <View style={[styles.postCateContainer]}>
               {subCateDisplayArray}
             </View>
