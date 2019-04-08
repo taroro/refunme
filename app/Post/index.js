@@ -50,16 +50,23 @@ export default class Step1 extends Component {
     })
   }
 
-  _goToHome = () => { Actions.home() }
+  _checkEmpty = () => {
+    if(this.state.dateTime == "") return false;
+    if(this.state.location.latitude == "0.00000" || this.state.location.longitude == "0.00000") return false;
+    return true;
+  }
+
   _goToSecondStep = () => { 
     const postTypePass = this.state.postType
     const dateTimeData = this.state.dateTime
     const locationData = this.state.location
-    Actions.secondstep({
-      postType: postTypePass,
-      dateTime: dateTimeData,
-      location: locationData
-    }) 
+    //if(!this._checkEmpty()) {
+      Actions.secondstep({
+        postType: postTypePass,
+        dateTime: dateTimeData,
+        location: locationData
+      }) 
+    //} 
   }
 
   render() {

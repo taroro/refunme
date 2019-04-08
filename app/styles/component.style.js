@@ -17,6 +17,12 @@ export default StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
         position: 'absolute'
     },
+    textExtraLarge: {
+        color: theme.FONT_PRIMARY_COLOR,
+        fontFamily: theme.FONT_FAMILY,
+        fontSize: theme.FONT_SIZE_EXTRA,
+        textAlign: 'left',
+    },
     textHeader: {
         color: theme.FONT_PRIMARY_COLOR,
         fontFamily: theme.FONT_FAMILY,
@@ -69,6 +75,14 @@ export default StyleSheet.create({
         marginRight: 15,
         flexWrap: "wrap",
         alignItems: "stretch"
+    },
+    confirmPhotoContainer: {
+        width: "100%",
+        flexDirection: "row",
+        marginTop: 10,
+        flexWrap: "wrap",
+        alignItems: "stretch",
+        justifyContent: "center",
     },
     postAddPhotoButton: {
         backgroundColor:theme.BACKGROUND_SECONDARY_COLOR,

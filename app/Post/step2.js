@@ -20,50 +20,18 @@ export default class Step2 extends Component {
     };
   }
 
-  _uploadImage(docRef, index, uri, mime = 'image/jpg') {
-    return new Promise((resolve, reject) => {
-      const imageRef = firebase.storage().ref('photos/'+docRef.id+'/').child('image'+index.toString()+'.jpg')
-      imageRef.put(uri, {contentType: mime})
-      .then(() => { return imageRef.getDownloadURL(); })
-      .then((url) => {
-        resolve(url);
-        docRef.collection('photos').add({
-          title: 'thumb_image'+index.toString()+'.jpg',
-          url: url
-        });
-      })
-      .catch((error) => { reject(error); });
-    })
-  }
 
-  _goToLastStep = e => {
-    /*e.preventDefault();
-    const db = firebase.firestore();
-    db.settings({
-      timestampsInSnapshots: true
-    });
-    db.collection("post").add({
-      refunme_id: "qxNhLWm7pdzKAKu83cfQ",
-      post_type: this.props.postType,
-      latitude: this.props.location.latitude,
-      longitude: this.props.location.longitude,
-      available_datetime: this.props.dateTime,
-      post_datetime: moment(new Date()).format('DD/MM/YYYY HH:mm'), 
-      status: 0
-    }).then((docRef) => {
-      this.state.items.map((item, key) => {
-        docRef.collection("items").add({
-          cate_id: item.itemData.mainCate,
-          subcate_id: item.itemData.subCate,
-          subcate_title: item.itemData.cateTitle,
-          quantity: item.itemData.quantity,
-          unit: item.itemData.unit
-        })
-      })
-      this.state.photos.map((item, key) => {
-        this._uploadImage(docRef, key, item.uri.toString())
-      })
-    });*/
+  _goToLastStep = () => {
+    Actions.thirdstep({
+      postData: {
+        postType: this.props.postType,
+        availableDatetime: this.props.dateTime,
+        latitude: this.props.location.latitude,
+        longitude: this.props.location.longitude
+      },
+      itemArray: this.state.items,
+      photoArray: this.state.photos,
+    }) 
   };
 
   _updatePhotoData = (photos) => {

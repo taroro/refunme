@@ -1,8 +1,9 @@
 import React from 'react';
 import {Router, Scene, Modal, Stack, ActionConst} from 'react-native-router-flux';
-import Home from '../Home'
+import Home from '../Home';
 import Step1 from '../Post';
 import Step2 from '../Post/step2';
+import Confirm from '../Post/confirm';
 import PinMap from '../Post/pinMap';
 import CategorySelect from '../Post/categorySelect';
 import QuantitySelect from '../Post/quantitySelect';
@@ -14,6 +15,7 @@ const Routes = () => (
             <Scene key='home' component={Home} hideNavBar initial type={ActionConst.RESET} />
             <Scene key='firststep' component={Step1} hideNavBar />
             <Scene key='secondstep' component={Step2} hideNavBar />
+            <Scene key='thirdstep' component={Confirm} hideNavBar />
          </Stack>
          <Scene key='pinmap' component={PinMap} hideNavBar />
          <Scene key='categoryselect' component={CategorySelect} hideNavBar />
