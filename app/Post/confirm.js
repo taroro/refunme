@@ -10,6 +10,7 @@ import styles from '../styles/component.style';
 import NavBarRefun from '../components/NavBarRefun';
 import PhotoSelect from './photoSelect';
 import ItemList from './itemList';
+import { DateFormat } from '../helpers/DateFormat';
 
 export default class Confirm extends Component {
   constructor(props) {
@@ -97,6 +98,7 @@ export default class Confirm extends Component {
         </View>
       );
     });
+    let date = DateFormat(this.props.postData.availableDatetime,);
 
     return(
       <SafeAreaView style={[styles.container]} forceInset={{top: "always"}}>
@@ -117,7 +119,7 @@ export default class Confirm extends Component {
                       <Icon name="calendar" size={35} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
                     </View>
                     <View style={{marginLeft:20}}>
-                      <Text style={[styles.textExtraLarge]}>วันศุกร์ที่......</Text>
+                      <Text style={[styles.textExtraLarge]}>{date.today?"วันนี้":"วัน"+date.dayFullText+"ที่ "+date.dateNum+" "+date.monthFullText+" "+date.year} {date.timeText+" น."}</Text>
                     </View>
                   </View>
                 </View>
