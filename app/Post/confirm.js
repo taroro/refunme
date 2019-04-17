@@ -46,6 +46,8 @@ export default class Confirm extends Component {
       post_type: this.props.postData.postType,
       latitude: this.props.postData.latitude,
       longitude: this.props.postData.longitude,
+      short_address: this.props.postData.shortAddress,
+      full_address: this.props.postData.fullAddress,
       available_datetime: this.props.postData.availableDatetime,
       post_datetime: moment(new Date()).format('DD/MM/YYYY HH:mm'), 
       status: 0

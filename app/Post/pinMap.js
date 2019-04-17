@@ -5,6 +5,7 @@ import { Actions } from 'react-native-router-flux';
 import theme from '../styles/theme.style';
 import styles from '../styles/component.style';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import { GeoAddressShort, GeoAddressFull } from '../helpers/GeoAddress';
 
 export default class PinMap extends Component {
   constructor(props) {
@@ -15,6 +16,8 @@ export default class PinMap extends Component {
       longitude: null,
       error:null,
       region: null,
+      shortAddress: "",
+      fullAddress: ""
     };
   }
 
@@ -30,7 +33,16 @@ export default class PinMap extends Component {
             longitude: position.coords.longitude,
             latitudeDelta: 0.003,
             longitudeDelta: 0.003,
-          },
+          }
+        }, () => {
+          fetch('https://maps.googleapis.com/maps/api/geocode/json?address='+this.state.latitude+','+this.state.longitude+'&key=AIzaSyB1V50rJuipzBiuMi1BoPdjdx1xV33NmLA&language=TH')
+            .then((response) => response.json())
+            .then((responseJson) => {
+              this.setState({
+                shortAddress: GeoAddressShort(responseJson),
+                fullAddress: GeoAddressFull(responseJson)
+              })
+            })
         });
       },
       (error) => this.setState({ error: error.message }),
@@ -41,7 +53,9 @@ export default class PinMap extends Component {
   componentWillUnmount() {
     this.props.onPop({
       latitude:this.state.latitude,
-      longitude:this.state.longitude
+      longitude:this.state.longitude,
+      shortAddress:this.state.shortAddress,
+      fullAddress:this.state.fullAddress
     });
   }
 

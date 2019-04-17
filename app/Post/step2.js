@@ -27,7 +27,9 @@ export default class Step2 extends Component {
         postType: this.props.postType,
         availableDatetime: this.props.dateTime,
         latitude: this.props.location.latitude,
-        longitude: this.props.location.longitude
+        longitude: this.props.location.longitude,
+        shortAddress: this.props.location.shortAddress,
+        fullAddress: this.props.location.fullAddress,
       },
       itemArray: this.state.items,
       photoArray: this.state.photos,

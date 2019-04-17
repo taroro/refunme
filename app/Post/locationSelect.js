@@ -13,6 +13,8 @@ export default class LocationSelect extends Component {
     this.state = {
       latitude:'0.00000',
       longitude:'0.00000',
+      shortAddress: "",
+      fullAddress: ""
     };
   }
 
@@ -21,16 +23,19 @@ export default class LocationSelect extends Component {
     this.setState({
       latitude:location.latitude,
       longitude:location.longitude,
+      shortAddress: location.shortAddress,
+      fullAddress: location.fullAddress
     }, () => { this.props._updateLocationToParent({
       latitude:this.state.latitude,
       longitude:this.state.longitude,
+      shortAddress: this.state.shortAddress,
+      fullAddress: this.state.fullAddress
     })} );
     
   }
 
   render() {
-    const latitude = this.state.latitude;
-    const longitude = this.state.longitude;
+    const fullAddress = this.state.fullAddress;
 
     return (
       <View style={{marginTop:20, marginLeft:15, marginRight:15}}>
@@ -42,7 +47,7 @@ export default class LocationSelect extends Component {
             </View>
             <View style={{justifyContent:'center', flex:1, paddingRight:10}}>
               <TouchableOpacity onPress={this._goToPinMap} >
-                <TextBoxDisabled title={latitude+', '+longitude} />
+                <TextBoxDisabled title={fullAddress} />
               </TouchableOpacity>
             </View>
             </View>
