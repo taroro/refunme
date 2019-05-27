@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, ImageBackground, TouchableOpacity} from 'react-native';
-import {Button} from 'react-native-paper';
+import {Text, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import {Actions} from 'react-native-router-flux';
 import theme from '../styles/theme.style';
@@ -14,7 +13,7 @@ export default class LocationSelect extends Component {
       latitude:'0.00000',
       longitude:'0.00000',
       shortAddress: "",
-      fullAddress: ""
+      fullAddress: "คลิกเพื่อระบุพิกัด"
     };
   }
 
@@ -43,7 +42,7 @@ export default class LocationSelect extends Component {
         <View style={{backgroundColor:theme.BACKGROUND_SECONDARY_COLOR, borderRadius:10, width:'100%',}}>
           <View style={{height:55, flexDirection:'row'}} >
             <View style={{width:70, justifyContent:'center', alignItems:'center'}}>
-              <Icon name="location-pin" size={35} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
+              <Icon name="location-pin" size={32} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
             </View>
             <View style={{justifyContent:'center', flex:1, paddingRight:10}}>
               <TouchableOpacity onPress={this._goToPinMap} >
@@ -51,21 +50,6 @@ export default class LocationSelect extends Component {
               </TouchableOpacity>
             </View>
             </View>
-        </View>
-        <View style={{width:"100%", height:150}}>
-          <TouchableOpacity onPress={this._goToPinMap} >
-            <ImageBackground 
-              source={require('../assets/images/mapmockup.png')} 
-              style={{width:'100%', height:150, justifyContent:'center', alignItems:'center'}} >
-              <Button 
-                mode="contained" 
-                color={theme.SECONDARY_COLOR} 
-                dark={true} 
-                style={{width:"60%"}}>
-                <Text style={[styles.textNormal]}>คลิกเพื่อระบุพิกัด</Text>
-              </Button>
-            </ImageBackground>
-          </TouchableOpacity>
         </View>
       </View>
     )

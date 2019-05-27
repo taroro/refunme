@@ -12,7 +12,7 @@ export default class DateTimeSelect extends Component {
     super();
     this.state = {
       isDateTimePickerVisible: false,
-      chosenDate: 'วว/ดด/ปป'
+      chosenDate: 'คลิกเพื่อเลือกวันและเวลาที่สะดวก'
     };
   }
   _showDateTimePicker = () => this.setState({isDateTimePickerVisible: true});
@@ -43,7 +43,7 @@ export default class DateTimeSelect extends Component {
             <View style={{width: 70, justifyContent: 'center', alignItems: 'center'}}>
               <Icon
                 name="calendar"
-                size={35}
+                size={32}
                 backgroundColor={theme.COLOR_WHITE}
                 color={theme.PRIMARY_COLOR}
               />

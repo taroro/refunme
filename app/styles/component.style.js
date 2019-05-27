@@ -53,6 +53,12 @@ export default StyleSheet.create({
         fontSize: theme.FONT_SIZE_SMALL,
         textAlign: 'left',
     },
+    textLargest: {
+        color: theme.FONT_SECONDARY_COLOR,
+        fontFamily: theme.FONT_FAMILY,
+        fontSize: theme.FONT_SIZE_LARGEST,
+        textAlign: 'left',
+    },
     postContainer: {
         alignItems: "stretch",
         flexDirection: "column",
@@ -131,5 +137,39 @@ export default StyleSheet.create({
     },
     textCategoryNormalBox: {
 
+    },
+    postList: {
+        borderRadius: 10,
+        width: "100%",
+        alignItems: "stretch",
+        borderWidth: 0,
+        borderColor: theme.PRIMARY_COLOR,
+        backgroundColor: theme.COLOR_WHITE,
+        paddingTop: 12,
+        paddingBottom: 12,
+        paddingLeft: 16,
+        paddingRight: 16,
+        marginBottom:15,
+        shadowColor: theme.BACKGROUND_PRIMARY_COLOR,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.9,
+        shadowRadius: 2,
+    },
+    quotationList: {
+        borderRadius: 10,
+        width: "70%",
+        alignItems: "stretch",
+        borderWidth: 0,
+        borderColor: theme.PRIMARY_COLOR,
+        backgroundColor: theme.COLOR_WHITE,
+        paddingTop: 12,
+        paddingBottom: 12,
+        paddingLeft: 16,
+        paddingRight: 16,
+        marginBottom:15,
+        shadowColor: theme.BACKGROUND_PRIMARY_COLOR,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.9,
+        shadowRadius: 2,
     }
 });

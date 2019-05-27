@@ -10,7 +10,13 @@ class NavBarRefun extends Component {
       super();
     }
 
-    onPressButton = () => { Actions[this.props.action].call() }
+    onPressButton = () => { 
+        if(this.props.action == "back") {
+            Actions.pop()
+        }else {
+            Actions[this.props.action].call() 
+        }
+    }
 
     render () {
         return (
@@ -29,8 +35,7 @@ class NavBarRefun extends Component {
                         color={ theme.COLOR_WHITE }
                         titleStyle={{ 
                             fontFamily: theme.FONT_FAMILY,
-                            fontSize: theme.FONT_SIZE_HEADER, 
-                            fontWeight: "bold"
+                            fontSize: theme.FONT_SIZE_EXTRA,
                         }}
                     />
                 </Appbar.Header>

@@ -53,7 +53,7 @@ export default class PostTypeSelect extends Component {
             </View>
             <View style={{justifyContent:'center'}}>
               <Text style={[styles.textNormal]}>ประกาศขายแบบเปิดรับข้อเสนอ</Text>
-              <Text style={[styles.textTiny]}>ผู้ขายสามารถรับข้อเสนอราคาจาก REFUN MAN</Text>
+              <Text style={[styles.textTiny]}>ผู้ขายสามารถรับข้อเสนอจาก REFUN MAN</Text>
             </View>
           </View>
         </View>

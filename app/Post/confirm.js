@@ -16,7 +16,7 @@ export default class Confirm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false
+      loading: false,
     };
   }
   
@@ -29,7 +29,7 @@ export default class Confirm extends Component {
         resolve(url);
         docRef.collection('photos').add({
           title: 'thumb_image'+index.toString()+'.jpg',
-          url: url
+          url: url.replace('image', 'thumb_image')
         });
       })
       .catch((error) => { reject(error); });
@@ -44,6 +44,7 @@ export default class Confirm extends Component {
     });
     db.collection("post").add({
       refunme_id: "qxNhLWm7pdzKAKu83cfQ",
+      //refunme_id: "L4QaaX4V2Hgi6VdTrTkA",
       post_type: this.props.postData.postType,
       latitude: this.props.postData.latitude,
       longitude: this.props.postData.longitude,
@@ -51,7 +52,8 @@ export default class Confirm extends Component {
       full_address: this.props.postData.fullAddress,
       available_datetime: this.props.postData.availableDatetime,
       post_datetime: moment(new Date()).format('DD/MM/YYYY HH:mm'), 
-      status: 0
+      status: 0, 
+      accepted_quotation: "",
     }).then((docRef) => {
       this.props.itemArray.map((item, key) => {
         docRef.collection("items").add({
@@ -64,6 +66,14 @@ export default class Confirm extends Component {
       })
       this.props.photoArray.map((item, key) => {
         this._uploadImage(docRef, key, item.uri.toString())
+      })
+      this.setState({
+        docRef: docRef
+      })
+    }).then(() => {
+      Actions.confirmeddetail({
+        postKey: this.state.docRef.id,
+        photoArray: this.props.photoArray
       })
     });
   }
@@ -113,13 +123,13 @@ export default class Confirm extends Component {
             <View style={{marginTop:20, marginLeft:15, marginRight:15}}>
               <View><Text style={[styles.textNormal, {paddingLeft:10}]}>ยืนยันการประกาศขาย</Text></View>
               <View style={{ backgroundColor:theme.BACKGROUND_SECONDARY_COLOR, borderRadius:10, width: '100%'}}>
-                <View style={{width: "100%",height: 80}}>
-                  <View style={{flex:1, justifyContent: "center", alignItems: "center", marginLeft:5, marginRight:5, flexDirection:'row'}}>
-                    <View>
+                <View style={{width: "100%",height: 100}}>
+                  <View style={{flex:1, justifyContent:"flex-start", alignItems:"flex-start", marginLeft:5, marginRight:5, flexDirection:'row', marginTop:10}}>
+                    <View style={{width: 50, alignItems: "center", justifyContent:"center"}}>
                       <Icon name="calendar" size={35} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
                     </View>
-                    <View style={{marginLeft:20}}>
-                      <Text style={[styles.textExtraLarge]}>{date.today?"วันนี้":"วัน"+date.dayFullText+"ที่ "+date.dateNum+" "+date.monthFullText+" "+date.year} {date.timeText+" น."}</Text>
+                    <View style={{marginLeft:10}}>
+                      <Text numberOfLines={3} style={[styles.textHeader, {textAlign: "left"}]}>{date.today?"วันนี้":"วัน"+date.dayFullText+"ที่ "+date.dateNum+" "+date.monthShortText+" "+date.year+"\n"}{"เวลา "+date.timeText+" น."}</Text>
                     </View>
                   </View>
                 </View>

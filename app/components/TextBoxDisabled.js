@@ -19,7 +19,7 @@ export default class TextBoxDisabled extends Component {
                 paddingRight:10,
                 width:"100%", 
               }}>
-                <Text style={[ styles.textNormal ]}>{ this.props.title }</Text>
+                <Text numberOfLines={1} style={[ styles.textSmall, {textAlign: "left"} ]}>{ this.props.title }</Text>
             </View>
         )
     }
