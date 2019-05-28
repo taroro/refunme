@@ -122,7 +122,7 @@ export default class PostDetail extends Component {
   _sendMessage() {
     firebase.firestore().collection('quotation').doc(this.state.postDetail.acceptedQuotation).collection('chat').add({
       message: this.state.message,
-      send_datetime: moment(new Date()).format('DD/MM/YYYY HH:mm'),
+      send_datetime: moment(new Date()).format('DD/MM/YYYY HH:mm:ss'),
       sender: this.state.chatSender,
       receiver: this.state.refunManId,
     }).then((doc) => {
@@ -242,7 +242,7 @@ export default class PostDetail extends Component {
               </View>
               <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
                 <TextInput
-                  style={{height:40, borderRadius:10, width: '100%', backgroundColor: theme.COLOR_WHITE, paddingLeft:10, paddingRight:10,}}
+                  style={{height:40, borderWidth: 1, borderColor: theme.COLOR_GREY, borderRadius:10, width: '100%', backgroundColor: theme.COLOR_WHITE, paddingLeft:10, paddingRight:10,}}
                   onChangeText={(message) => this.setState({message})}
                   value={this.state.message}
                   autoFocus

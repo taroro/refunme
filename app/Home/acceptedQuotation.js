@@ -12,8 +12,8 @@ import {Appbar} from 'react-native-paper'
 export default class AcceptedQuotation extends Component {
   constructor(props) {
     super(props)
-    this.unsubscribeQuotations = null
-    this.unsubscribeChat = null
+    this.unsubscribeQuotationsAccepted = null
+    this.unsubscribeChatAccepted = null
     this.refQuotations = firebase.firestore().collection('quotation').doc(this.props.quotationId);
     this.refChatCollection = this.refQuotations.collection('chat').orderBy('send_datetime')
     
@@ -27,8 +27,13 @@ export default class AcceptedQuotation extends Component {
   }
 
   componentDidMount() {
-    this.unsubscribeQuotations = this.refQuotations.onSnapshot(this._onQuotationDocumentUpdate);
-    this.unsubscribeChat = this.refChatCollection.onSnapshot(this._onChatUpdate);
+    this.unsubscribeQuotationsAccepted = this.refQuotations.onSnapshot(this._onQuotationDocumentUpdate);
+    this.unsubscribeChatAccepted = this.refChatCollection.onSnapshot(this._onChatUpdate);
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeQuotationsAccepted();
+    this.unsubscribeChatAccepted();
   }
 
   _onChatUpdate = (chatsCollection) => {
@@ -78,12 +83,12 @@ export default class AcceptedQuotation extends Component {
         <View key={'chat'+key} style={{width: '100%', margin: 10}}>
           {(this.state.chatSender === chat.sender)?
           <View style={{width: '100%', alignItems: 'flex-end'}}>
-            <View style={{width: '65%', borderRadius: 10, backgroundColor:theme.PRIMARY_COLOR, padding: 10, marginRight: 20}}>
+            <View style={{width: '65%', borderRadius: 20, backgroundColor:theme.PRIMARY_COLOR, borderTopEndRadius: 0, padding: 10, marginRight: 20}}>
             <Text style={[styles.textNormal, {color: theme.COLOR_WHITE}]}>{chat.message}</Text></View>
           </View>
           :
           <View style={{width: '100%', alignItems: 'flex-start'}}>
-            <View style={{width: '65%', borderRadius: 10, backgroundColor:theme.COLOR_WHITE, padding: 10, marginRight: 20}}>
+            <View style={{width: '65%', borderRadius: 20, backgroundColor:theme.COLOR_WHITE, borderTopStartRadius: 0, padding: 10, marginRight: 20}}>
             <Text style={[styles.textNormal, {color: theme.COLOR_DARKGREY}]}>{chat.message}</Text></View>
           </View>
         }
