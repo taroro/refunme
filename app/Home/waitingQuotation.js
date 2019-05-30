@@ -13,7 +13,7 @@ export default class WaitingQuotation extends Component {
   constructor(props) {
     super(props)
     this.unsubscribeQuotations = null
-    this.refQuotations = firebase.firestore().collection('quotation').where('post_id', '==', this.props.postId).where('status', '==', 0);
+    this.refQuotations = firebase.firestore().collection('quotation').where('post_id', '==', this.props.postId).where('status', '==', 0).orderBy('sent_datetime', 'asc');
     
     this.state = {
       postId: this.props.postId,
@@ -49,12 +49,18 @@ export default class WaitingQuotation extends Component {
     });
   }
 
+  _goToCompareQuotation = (key) => {
+    Actions.comparequotation({
+      postId: key.toString()
+    });
+  }
+
   render() {
     let quotationDisplayArray = (this.state.quotations.length > 0)?this.state.quotations.map((quotation, key) => {
       let date = DateFormat(quotation.sentDate);
       return (
         <TouchableOpacity key={'quotation'+key} onPress={() => this._goToQuotationDetail(quotation.key, key)}>
-          <View style={[styles.quotationList, {flexDirection:'column'}]} key={key}>
+          <View style={[styles.quotationList, {flexDirection:'column', minWidth: '65%'}]} key={key}>
             <View style={{flex:2, marginTop:5, marginBottom:5, justifyContent:'center', alignItems:'center'}}>
               <Icon name='face' size={80} backgroundColor={theme.COLOR_WHITE} color={theme.COLOR_DARKGREY} />
             </View>
@@ -83,7 +89,18 @@ export default class WaitingQuotation extends Component {
     return (
       <View>
         {(this.state.quotations.length >0)?
-        <View><Text style={[{padding:10}, styles.textHeader]}>REFUN MAN ที่เสนอราคา</Text></View>
+        <View style={{flexDirection: 'column', marginTop: 10, marginBottom: 10}}>
+          <Text style={[{padding:10}, styles.textHeader]}>ใบเสนอราคาจาก REFUN MAN</Text>
+          {(this.state.quotations.length > 1)?
+          <View style={{width: '65%'}}>
+            <Icon.Button name='compare' backgroundColor={theme.COLOR_DARKGREY2} color={theme.COLOR_WHITE} onPress={() => this._goToCompareQuotation(this.props.postId)}>
+              <Text style={[styles.textSmall, {color:theme.COLOR_WHITE, textAlign: 'center'}]}>
+                เปรียบเทียบใบเสนอราคา
+              </Text>
+            </Icon.Button>
+          </View>:null
+          }
+        </View>
         :
         <View><Text style={[{padding:10}, styles.textHeader]}>ยังไม่มีใบเสนอราคาจาก REFUN MAN</Text></View>
         }

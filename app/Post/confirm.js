@@ -43,8 +43,8 @@ export default class Confirm extends Component {
       timestampsInSnapshots: true
     });
     db.collection("post").add({
-      refunme_id: "qxNhLWm7pdzKAKu83cfQ",
-      //refunme_id: "L4QaaX4V2Hgi6VdTrTkA",
+      //refunme_id: "qxNhLWm7pdzKAKu83cfQ",
+      refunme_id: "L4QaaX4V2Hgi6VdTrTkA",
       post_type: this.props.postData.postType,
       latitude: this.props.postData.latitude,
       longitude: this.props.postData.longitude,

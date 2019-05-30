@@ -12,8 +12,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 export default class Home extends Component {
   constructor() {
     super();
-    //this.refPostCollection = firebase.firestore().collection('post').where('refunme_id', '==', 'L4QaaX4V2Hgi6VdTrTkA');
-    this.refPostCollection = firebase.firestore().collection('post').where('refunme_id', '==', 'qxNhLWm7pdzKAKu83cfQ');
+    this.refPostCollection = firebase.firestore().collection('post').where('refunme_id', '==', 'L4QaaX4V2Hgi6VdTrTkA');
+    //this.refPostCollection = firebase.firestore().collection('post').where('refunme_id', '==', 'qxNhLWm7pdzKAKu83cfQ');
     this.state = {
       loading: false,
       posts: [],

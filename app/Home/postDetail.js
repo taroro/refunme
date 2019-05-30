@@ -75,7 +75,6 @@ export default class PostDetail extends Component {
 
     var promiseQuotation = new Promise((resolve, reject) => {
       if(postData.accepted_quotation != '') {
-
         firebase.firestore().collection('quotation').doc(postData.accepted_quotation).get().then((quotation) => {
           this.setState({
             chatSender: quotation.data().refunme_id,
@@ -181,11 +180,7 @@ export default class PostDetail extends Component {
           </Appbar.Header>
         </View>
         <View style={{flex: 1}}>
-          <ScrollView
-            ref={ref => this.scrollView = ref}
-            onContentSizeChange={(contentWidth, contentHeight)=>{        
-                this.scrollView.scrollToEnd({animated: true});
-            }}>
+          <ScrollView>
             {(postDetail)?
             <View style={{marginTop: 20, marginLeft: 15, marginRight: 15}}>
               <View style={{backgroundColor: theme.BACKGROUND_SECONDARY_COLOR, borderRadius: 10, width: '100%'}}>
