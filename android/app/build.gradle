@@ -139,7 +139,6 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-fbsdk')
     implementation project(':react-native-image-picker')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-material-kit')
@@ -154,8 +153,6 @@ dependencies {
     implementation "com.google.firebase:firebase-core:16.0.6"
     implementation "com.google.firebase:firebase-firestore:17.1.5"
     implementation 'com.google.firebase:firebase-storage:17.0.0'
-    // Facebook dependencies
-    implementation 'com.facebook.android:facebook-android-sdk:4.34.0'
 }
 apply plugin: 'com.google.gms.google-services'
 
