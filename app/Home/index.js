@@ -1,11 +1,13 @@
 import React, {Component} from 'react'
 import {StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity} from 'react-native'
-import {Button, Appbar} from 'react-native-paper'
+import {Button} from 'react-native-paper'
 import {Actions} from 'react-native-router-flux'
 import firebase from 'react-native-firebase'
 import theme from '../styles/theme.style'
 import styles from '../styles/component.style'
 import { DateFormat } from '../helpers/DateFormat'
+import {Appbar} from 'react-native-paper'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 export default class Home extends Component {
   constructor() {
