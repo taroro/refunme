@@ -11,7 +11,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import <GoogleMaps/GoogleMaps.h>
-#import <Firebase.h>
+#import "Firebase/Firebase.h"
 
 @implementation AppDelegate
 
@@ -19,7 +19,6 @@
 {
   [GMSServices provideAPIKey:@"AIzaSyB1V50rJuipzBiuMi1BoPdjdx1xV33NmLA"];
   [FIRApp configure];
-  
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"refunme"

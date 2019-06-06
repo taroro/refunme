@@ -1,28 +1,17 @@
 import React, {Component} from 'react'
-<<<<<<< HEAD
-import {Text, View, ScrollView, SafeAreaView, TouchableOpacity} from 'react-native'
-import {Button, Appbar} from 'react-native-paper'
-=======
 import {StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity} from 'react-native'
-import {Button} from 'react-native-paper'
->>>>>>> parent of 26af33e... revert to before fb
+import {Button, Appbar} from 'react-native-paper'
 import {Actions} from 'react-native-router-flux'
 import firebase from 'react-native-firebase'
 import theme from '../styles/theme.style'
 import styles from '../styles/component.style'
-<<<<<<< HEAD
-import {DateFormat} from '../helpers/DateFormat'
-=======
 import { DateFormat } from '../helpers/DateFormat'
-import {Appbar} from 'react-native-paper'
-import Icon from 'react-native-vector-icons/MaterialIcons'
->>>>>>> parent of 26af33e... revert to before fb
 
 export default class Home extends Component {
   constructor() {
-    super()
-    this.refPostCollection = firebase.firestore().collection('post').where('refunme_id', '==', 'L4QaaX4V2Hgi6VdTrTkA')
-    //this.refPostCollection = firebase.firestore().collection('post').where('refunme_id', '==', 'qxNhLWm7pdzKAKu83cfQ')
+    super();
+    this.refPostCollection = firebase.firestore().collection('post').where('refunme_id', '==', 'L4QaaX4V2Hgi6VdTrTkA');
+    //this.refPostCollection = firebase.firestore().collection('post').where('refunme_id', '==', 'qxNhLWm7pdzKAKu83cfQ');
     this.state = {
       loading: false,
       posts: [],
@@ -34,11 +23,11 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    this.unsubscribePost = this.refPostCollection.onSnapshot(this._onPostCollectionUpdate)
+    this.unsubscribePost = this.refPostCollection.onSnapshot(this._onPostCollectionUpdate);
   }
 
   _onPostCollectionUpdate = (postsSnapshot) => {
-    var promises = []
+    var promises = [];
     postsSnapshot.forEach(post => {
       var postId = post.id
       var postData = post.data()
@@ -89,8 +78,8 @@ export default class Home extends Component {
 
   _renderPost() {
     let postDisplayArray = this.state.posts.map((post, key) => {
-      let date = DateFormat(post.availableDatetime)
-      let postDate = DateFormat(post.postDatetime)
+      let date = DateFormat(post.availableDatetime);
+      let postDate = DateFormat(post.postDatetime);
 
       return (
         <TouchableOpacity key={post.postId} onPress={() => this._goToPostDetail(post.postId)}>
@@ -130,16 +119,17 @@ export default class Home extends Component {
   }
 
   componentWillUnmount() {
-    this.unsubscribePost()
+    this.unsubscribePost();
   }
 
   _goToPostDetail = key => {
     Actions.postdetail({
       postId: key.toString()
-    })
+    });
   }
 
   render() {
+
     return (
       <SafeAreaView style={[styles.container]} forceInset={{top: 'always'}}>
         <View style={{height: 55}}>
