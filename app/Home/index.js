@@ -1,11 +1,22 @@
 import React, {Component} from 'react'
+<<<<<<< HEAD
 import {Text, View, ScrollView, SafeAreaView, TouchableOpacity} from 'react-native'
 import {Button, Appbar} from 'react-native-paper'
+=======
+import {StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity} from 'react-native'
+import {Button} from 'react-native-paper'
+>>>>>>> parent of 26af33e... revert to before fb
 import {Actions} from 'react-native-router-flux'
 import firebase from 'react-native-firebase'
 import theme from '../styles/theme.style'
 import styles from '../styles/component.style'
+<<<<<<< HEAD
 import {DateFormat} from '../helpers/DateFormat'
+=======
+import { DateFormat } from '../helpers/DateFormat'
+import {Appbar} from 'react-native-paper'
+import Icon from 'react-native-vector-icons/MaterialIcons'
+>>>>>>> parent of 26af33e... revert to before fb
 
 export default class Home extends Component {
   constructor() {

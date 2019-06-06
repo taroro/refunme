@@ -1,6 +1,9 @@
 rootProject.name = 'refunme'
+<<<<<<< HEAD
 include ':react-native-firebase'
 project(':react-native-firebase').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-firebase/android')
+=======
+>>>>>>> parent of 26af33e... revert to before fb
 include ':react-native-fbsdk'
 project(':react-native-fbsdk').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fbsdk/android')
 include ':react-native-image-picker'

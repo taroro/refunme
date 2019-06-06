@@ -86,6 +86,7 @@
     <key>NSMicrophoneUsageDescription</key>
     <string>$(PRODUCT_NAME) would like to your microphone (for videos)</string>
     <key>CFBundleURLTypes</key>
+<<<<<<< HEAD
     <array>
       <dict>
         <key>CFBundleURLSchemes</key>
@@ -107,3 +108,26 @@
     </array>
   </dict>
 </plist>
+=======
+      <array>
+        <dict>
+          <key>CFBundleURLSchemes</key>
+          <array>
+            <string>fb2106189602840145</string>
+          </array>
+        </dict>
+      </array>
+    <key>FacebookAppID</key>
+      <string>2106189602840145</string>
+    <key>FacebookDisplayName</key>
+      <string>Refun Me</string>
+    <key>LSApplicationQueriesSchemes</key>
+      <array>
+        <string>fbapi</string>
+        <string>fb-messenger-api</string>
+        <string>fbauth2</string>
+        <string>fbshareextension</string>
+      </array>
+</dict>
+</plist>
+>>>>>>> parent of 26af33e... revert to before fb
