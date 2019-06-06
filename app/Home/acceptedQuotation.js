@@ -1,20 +1,16 @@
 import React, {Component} from 'react'
-import {Text, View, SafeAreaView, Image, ScrollView, TouchableOpacity} from 'react-native'
-import {Divider} from 'react-native-paper'
-import {Actions} from 'react-native-router-flux'
+import {Text, View} from 'react-native'
 import firebase from 'react-native-firebase'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import theme from '../styles/theme.style'
 import styles from '../styles/component.style'
-import {DateFormat} from '../helpers/DateFormat'
-import {Appbar} from 'react-native-paper'
 
 export default class AcceptedQuotation extends Component {
   constructor(props) {
     super(props)
     this.unsubscribeQuotationsAccepted = null
     this.unsubscribeChatAccepted = null
-    this.refQuotations = firebase.firestore().collection('quotation').doc(this.props.quotationId);
+    this.refQuotations = firebase.firestore().collection('quotation').doc(this.props.quotationId)
     this.refChatCollection = this.refQuotations.collection('chat').orderBy('send_datetime')
     
     this.state = {
@@ -27,17 +23,17 @@ export default class AcceptedQuotation extends Component {
   }
 
   componentDidMount() {
-    this.unsubscribeQuotationsAccepted = this.refQuotations.onSnapshot(this._onQuotationDocumentUpdate);
-    this.unsubscribeChatAccepted = this.refChatCollection.onSnapshot(this._onChatUpdate);
+    this.unsubscribeQuotationsAccepted = this.refQuotations.onSnapshot(this._onQuotationDocumentUpdate)
+    this.unsubscribeChatAccepted = this.refChatCollection.onSnapshot(this._onChatUpdate)
   }
 
   componentWillUnmount() {
-    this.unsubscribeQuotationsAccepted();
-    this.unsubscribeChatAccepted();
+    this.unsubscribeQuotationsAccepted()
+    this.unsubscribeChatAccepted()
   }
 
   _onChatUpdate = (chatsCollection) => {
-    var chats = [];
+    var chats = []
     chatsCollection.forEach((chat) => {
       var data = chat.data();
       chats.push({
@@ -45,8 +41,8 @@ export default class AcceptedQuotation extends Component {
         sendDatetime: data.send_datetime,
         sender: data.sender,
         receiver: data.receiver,
-      });
-    });
+      })
+    })
     this.setState({
       chats: chats
     })
@@ -76,6 +72,29 @@ export default class AcceptedQuotation extends Component {
     })
   }
 
+  _renderRefunManCard = (quotation) => {
+    return (
+      <View style={[styles.quotationList, {flexDirection: 'column'}]}>
+        <View style={{flex: 2, marginTop: 5, marginBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+          <Icon name='face' size={80} backgroundColor={theme.COLOR_WHITE} color={theme.COLOR_DARKGREY} />
+        </View>
+        <View style={{flex: 1, flexDirection: 'row', marginTop: 5, marginBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+          <Icon name='star' size={30} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
+          <Icon name='star' size={30} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
+          <Icon name='star' size={30} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
+          <Icon name='star-half' size={30} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
+          <Icon name='star-border' size={30} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
+        </View>
+        <View>
+          <Text style={[styles.textHeader, {textAlign: 'center', color: theme.COLOR_DARKGREY}]}>{quotation.refunManName}</Text>
+        </View>
+        <View style={{flex: 2, flexDirection: 'row', marginTop: 5, marginBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+          <Text style={[styles.textNormalGreen, {textAlign: 'center'}]}>ถูกรับเลือกแล้ว</Text>
+        </View>
+      </View>
+    )
+  }
+
   render() {
     let quotation = this.state.quotation[0]
     let chatsDisplay = (this.state.chats.length > 0 && this.state.chatSender !== '')?this.state.chats.map((chat, key) => {
@@ -99,27 +118,8 @@ export default class AcceptedQuotation extends Component {
     return (
       <View>
         <View><Text style={[{padding:10, textAlign:'center', width:'100%'}, styles.textHeader]}>REFUN MAN ที่คุณเลือก</Text></View>
-        <View style={{alignItems:(this.state.waiting)?'flex-end':'flex-start'}}>
-          {(quotation)?
-          <View style={[styles.quotationList, {flexDirection:'column'}]}>
-            <View style={{flex:2, marginTop:5, marginBottom:5, justifyContent:'center', alignItems:'center'}}>
-              <Icon name='face' size={80} backgroundColor={theme.COLOR_WHITE} color={theme.COLOR_DARKGREY} />
-            </View>
-            <View style={{flex:1, flexDirection:'row', marginTop:5, marginBottom:5, justifyContent:'center', alignItems:'center'}}>
-              <Icon name='star' size={30} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
-              <Icon name='star' size={30} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
-              <Icon name='star' size={30} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
-              <Icon name='star-half' size={30} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
-              <Icon name='star-border' size={30} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
-            </View>
-            <View>
-              <Text style={[styles.textHeader, {textAlign:'center', color:theme.COLOR_DARKGREY}]}>{quotation.refunManName}</Text>
-            </View>
-            <View style={{flex:2, flexDirection:'row', marginTop:5, marginBottom:5, justifyContent:'center', alignItems:'center'}}>
-              <Text style={[styles.textNormalGreen, {textAlign:'center'}]}>ถูกรับเลือกแล้ว</Text>
-            </View>
-          </View>:null
-          }
+        <View style={{alignItems: (this.state.waiting)?'flex-end':'flex-start'}}>
+          {(quotation)?this._renderRefunManCard(quotation):null}
         </View>
         <View style={{flex: 1, widht: '100%', margin: 10}}>{chatsDisplay}</View>
       </View>

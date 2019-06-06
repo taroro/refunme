@@ -3,11 +3,12 @@ package com.refunme;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.RNFirebasePackage;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import io.invertase.firebase.RNFirebasePackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -32,11 +33,12 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFirebasePackage(),
+            new FBSDKPackage(),
             new ImagePickerPackage(),
             new VectorIconsPackage(),
             new ReactMaterialKitPackage(),
             new RNGestureHandlerPackage(),
-            new RNFirebasePackage(),
             new MapsPackage(),
             new RNFirebaseFirestorePackage(),
             new RNFirebaseStoragePackage()

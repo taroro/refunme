@@ -8,10 +8,14 @@
     "postinstall": "./node_modules/react-native-maps/enable-google-maps ios/GoogleMaps/"
   },
   "dependencies": {
+    "@react-native-firebase/app": "0.0.4",
+    "adm-zip": "^0.4.13",
     "moment": "^2.24.0",
+    "plist": "^3.0.1",
     "react": "16.8.3",
     "react-native": "0.59.1",
-    "react-native-firebase": "^5.2.3",
+    "react-native-fbsdk": "0.8.0",
+    "react-native-firebase": "^5.4.2",
     "react-native-gesture-handler": "^1.1.0",
     "react-native-image-picker": "^0.28.0",
     "react-native-maps": "^0.23.0",
@@ -20,7 +24,8 @@
     "react-native-paper": "^2.13.0",
     "react-native-router-flux": "^4.0.6",
     "react-native-vector-icons": "^6.4.1",
-    "react-navigation": "^3.4.1"
+    "react-navigation": "^3.4.1",
+    "xcode": "^2.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.3.4",
