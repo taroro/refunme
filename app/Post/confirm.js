@@ -15,19 +15,24 @@ import { DateFormat } from '../helpers/DateFormat';
 export default class Confirm extends Component {
   constructor(props) {
     super(props);
+    this.db = firebase.firestore()
+    this.refPostColection = this.db.collection('post')
+    /*this.db.settings({
+      timestampsInSnapshots: true
+    });*/
     this.state = {
       loading: false,
     };
   }
   
-  _uploadImage(docRef, index, uri, mime = 'image/jpg') {
+  _uploadImage(docId, index, uri, mime = 'image/jpg') {
     return new Promise((resolve, reject) => {
-      const imageRef = firebase.storage().ref('photos/'+docRef.id+'/').child('image'+index.toString()+'.jpg')
+      const imageRef = firebase.storage().ref('photos/'+docId+'/').child('image'+index.toString()+'.jpg')
       imageRef.put(uri, {contentType: mime})
       .then(() => { return imageRef.getDownloadURL(); })
       .then((url) => {
         resolve(url);
-        docRef.collection('photos').add({
+        this.refPostColection.doc(docId).collection('photos').add({
           title: 'thumb_image'+index.toString()+'.jpg',
           url: url.replace('image', 'thumb_image')
         });
@@ -38,13 +43,8 @@ export default class Confirm extends Component {
 
   _finishPost = e => {
     e.preventDefault();
-    const db = firebase.firestore();
-    db.settings({
-      timestampsInSnapshots: true
-    });
-    db.collection("post").add({
-      //refunme_id: "qxNhLWm7pdzKAKu83cfQ",
-      refunme_id: "L4QaaX4V2Hgi6VdTrTkA",
+    this.refPostColection.add({
+      refunme_id: global.refunMeId,
       post_type: this.props.postData.postType,
       latitude: this.props.postData.latitude,
       longitude: this.props.postData.longitude,
@@ -55,8 +55,9 @@ export default class Confirm extends Component {
       status: 0, 
       accepted_quotation: "",
     }).then((docRef) => {
+      var docId = docRef.id
       this.props.itemArray.map((item, key) => {
-        docRef.collection("items").add({
+        this.refPostColection.doc(docId).collection("items").add({
           cate_id: item.itemData.mainCate,
           subcate_id: item.itemData.subCate,
           subcate_title: item.itemData.cateTitle,
@@ -65,14 +66,14 @@ export default class Confirm extends Component {
         })
       })
       this.props.photoArray.map((item, key) => {
-        this._uploadImage(docRef, key, item.uri.toString())
+        this._uploadImage(docId, key, item.uri.toString())
       })
       this.setState({
-        docRef: docRef
+        docId: docId
       })
     }).then(() => {
       Actions.confirmeddetail({
-        postKey: this.state.docRef.id,
+        postKey: this.state.docId,
         photoArray: this.props.photoArray
       })
     });

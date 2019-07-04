@@ -6,27 +6,39 @@ import firebase from 'react-native-firebase'
 import theme from '../styles/theme.style'
 import styles from '../styles/component.style'
 import { DateFormat } from '../helpers/DateFormat'
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export default class Home extends Component {
   constructor() {
     super();
-    this.refPostCollection = firebase.firestore().collection('post').where('refunme_id', '==', 'L4QaaX4V2Hgi6VdTrTkA');
-    //this.refPostCollection = firebase.firestore().collection('post').where('refunme_id', '==', 'qxNhLWm7pdzKAKu83cfQ');
+    this.refActivePost = firebase.firestore().collection('post')
+      .where('refunme_id', '==', global.refunMeId)
+      .where('status', '<', 3)
+    this.refArchivePost = firebase.firestore().collection('post')
+      .where('refunme_id', '==', global.refunMeId)
+      .where('status', '==', 3)
+
     this.state = {
       loading: false,
-      posts: [],
+      activePosts: [],
+      archivePosts: [],
     }
   }
 
-  goToPost = () => {
-    Actions.firststep()
-  }
-
   componentDidMount() {
-    this.unsubscribePost = this.refPostCollection.onSnapshot(this._onPostCollectionUpdate);
+    this.setState({
+      loading: true
+    })
+    this.unsubActivePost = this.refActivePost.onSnapshot(this._onActivePostUpdate);
+    this.unsubArchivePost = this.refArchivePost.onSnapshot(this._onArchivePostUpdate);
   }
 
-  _onPostCollectionUpdate = (postsSnapshot) => {
+  componentWillUnmount() {
+    this.unsubActivePost();
+    this.unsubArchivePost();
+  }
+
+  _onActivePostUpdate = (postsSnapshot) => {
     var promises = [];
     postsSnapshot.forEach(post => {
       var postId = post.id
@@ -46,7 +58,33 @@ export default class Home extends Component {
 
     Promise.all(promises).then(posts => {
       this.setState({
-        posts: posts,
+        activePosts: posts,
+        loading: false
+      })
+    })
+  }
+
+  _onArchivePostUpdate = (postsSnapshot) => {
+    var promises = [];
+    postsSnapshot.forEach(post => {
+      var postId = post.id
+      var postData = post.data()
+      promises.push({
+        postId: postId,
+        availableDatetime: postData.available_datetime,
+        latitude: postData.latitude,
+        longitude: postData.longitude,
+        postDatetime: postData.post_datetime,
+        postType: postData.post_type,
+        refunMeId: postData.refunme_id,
+        shortAddress: postData.short_address,
+        fullAddress: postData.full_address,
+      })
+    })
+
+    Promise.all(promises).then(posts => {
+      this.setState({
+        archivePosts: posts,
         loading: false
       })
     })
@@ -54,6 +92,16 @@ export default class Home extends Component {
 
   _onPressMenuButton() {
 
+  }
+
+  _goToPostDetail = key => {
+    Actions.postdetail({
+      postId: key.toString()
+    });
+  }
+
+  goToPost = () => {
+    Actions.firststep()
   }
 
   _renderEmpty() {
@@ -76,8 +124,8 @@ export default class Home extends Component {
     )
   }
 
-  _renderPost() {
-    let postDisplayArray = this.state.posts.map((post, key) => {
+  _renderActivePost() {
+    let postDisplayArray = this.state.activePosts.map((post, key) => {
       let date = DateFormat(post.availableDatetime);
       let postDate = DateFormat(post.postDatetime);
 
@@ -107,29 +155,88 @@ export default class Home extends Component {
     })
 
     return (
-      <View style={{flex: 1, backgroundColor: theme.BACKGROUND_PRIMARY_COLOR}}>
-        <ScrollView>
-          <View style={{alignItems: 'stretch', justifyContent: 'center', padding: 10}}>{postDisplayArray}</View>
-        </ScrollView>
-        <View style={{marginTop: 10, marginLeft: 15, marginRight: 15, marginBottom: 10, backgroundColor: theme.PRIMARY_COLOR}}>
-          <Text style={[styles.textSmall, {padding: 10, color: theme.COLOR_WHITE, justifyContent: 'center', textAlign: 'center', width: '100%'}]}>คุณไม่สามารถเปิดประกาศใหม่ได้ {'\n'} ขณะที่มีประกาศกำลังทำงานอยู่</Text>
-        </View>
+      <View>
+        <View><Text style={[{marginTop: 10, paddingLeft: 10, textAlign:'center', width:'100%'}, styles.textHeader]}>ประกาศที่กำลังทำงาน</Text></View>
+        <View style={{alignItems: 'stretch', justifyContent: 'center', padding: 10}}>{postDisplayArray}</View>
       </View>
     )
   }
 
-  componentWillUnmount() {
-    this.unsubscribePost();
+  _renderArchivePost() {
+    let postDisplayArray = this.state.archivePosts.map((post, key) => {
+      let date = DateFormat(post.availableDatetime);
+      let postDate = DateFormat(post.postDatetime);
+
+      return (
+        <TouchableOpacity key={post.postId} onPress={() => this._goToPostDetail(post.postId)}>
+          <View style={[styles.postList, {flexDirection: 'column'}]}>
+            <View style={{flex: 2, flexDirection: 'row', marginTop: 5, marginBottom: 5, justifyContent: 'center', alignItems: 'center'}}>
+              <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
+                <View style={{flex: 3, alignItems: 'center', justifyContent: 'center', width: '100%'}}>
+                  <View style={{flexDirection: 'column', alignItems: 'center', backgroundColor: theme.COLOR_DARKGREY2, padding: 5, width: '100%', borderRadius: 20}}>
+                    <Text style={[styles.textHeader, {color: theme.COLOR_WHITE, textAlign: 'center'}]}>{date.dayFullText}</Text>
+                    <Text style= {[styles.textLargest, {color: theme.COLOR_WHITE, textAlign: 'center', marginTop: -15, marginBottom: -10}]}>{date.dateNum}</Text>
+                  </View>
+                </View>
+                <View style={{flex: 5, flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', marginLeft: 20, paddingTop: 5}}>
+                  <Text style={[styles.textHeader, {color: theme.COLOR_DARKGREY2, textAlign: 'left'}]}>{date.monthFullText+' '+date.year}</Text>
+                  <Text style={[styles.textExtraLarge, {color: theme.COLOR_DARKGREY2, textAlign: 'left'}]}>เวลา {date.timeText}</Text>
+                </View>
+              </View>
+            </View>
+            <View style={{flex: 1, alignItems: 'center', marginTop: 10}}>
+              <Text style={[styles.textTiny]}>ประกาศ{postDate.today?'วันนี้':'เมื่อวัน'+postDate.dayFullText+' '+postDate.dateNum+' '+postDate.monthShortText+' '+postDate.year} {postDate.timeText+' น.'}</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      )
+    })
+
+    return (
+      <View>
+        <View><Text style={[{marginTop: 10, paddingLeft: 10, textAlign:'center', width:'100%'}, styles.textHeader]}>ประกาศที่สำเร็จแล้ว</Text></View>
+        <View style={{alignItems: 'stretch', justifyContent: 'center', padding: 10}}>{postDisplayArray}</View>
+      </View>
+    )
   }
 
-  _goToPostDetail = key => {
-    Actions.postdetail({
-      postId: key.toString()
-    });
+  _renderPost() {
+    if(this.state.activePosts.length > 0 || this.state.archivePosts.length > 0) {
+      var activePost = null
+      var archivePost = null
+      if(this.state.activePosts.length > 0) {
+        activePost = this._renderActivePost()
+      }
+      if(this.state.archivePosts.length > 0) {
+        archivePost = this._renderArchivePost()
+      }
+
+      return (
+        <View style={{flex: 1, backgroundColor: theme.BACKGROUND_PRIMARY_COLOR}}>
+          <ScrollView>
+            {activePost}
+            {archivePost}
+          </ScrollView>
+          {
+            (this.state.activePosts.length > 0)?
+              <View style={{marginTop: 10, marginLeft: 15, marginRight: 15, marginBottom: 10, backgroundColor: theme.PRIMARY_COLOR}}>
+                <Text style={[styles.textSmall, {padding: 10, color: theme.COLOR_WHITE, justifyContent: 'center', textAlign: 'center', width: '100%'}]}>คุณไม่สามารถเปิดประกาศใหม่ได้ {'\n'} ขณะที่มีประกาศกำลังทำงานอยู่</Text>
+              </View>:
+              <View style={{marginTop: 10, marginLeft: 15, marginRight: 15, marginBottom: 10, backgroundColor: theme.PRIMARY_COLOR, alignItems: "center"}}>
+                <Text style={[styles.textSmall, {padding: 10, color: theme.COLOR_WHITE, justifyContent: 'center', textAlign: 'center', width: '100%'}]}>เปิดประกาศขายเลือก REFUN MAN รับซื้อ</Text>
+                <Button mode="contained" color={theme.COLOR_LIGHTGREY} dark={true}  onPress={this.goToPost} style={{width: "80%", marginBottom: 10}}>
+                  <Text style={{fontSize: 18, textAlign: "center", fontFamily: theme.FONT_FAMILY, width: "80%", color: theme.COLOR_DARKGREY}}>เปิดประกาศใหม่</Text>
+                </Button>
+              </View>
+          }
+        </View>
+      )
+    } else {
+      return this._renderEmpty()
+    }
   }
 
   render() {
-
     return (
       <SafeAreaView style={[styles.container]} forceInset={{top: 'always'}}>
         <View style={{height: 55}}>
@@ -142,7 +249,15 @@ export default class Home extends Component {
             />
           </Appbar.Header>
         </View>
-        { this.state.posts.length > 0? this._renderPost():this._renderEmpty() }
+        <Spinner
+          visible={this.state.loading}
+          animation={'fade'}
+          textContent={'รอสักครู่...'}
+          textStyle={{color:theme.PRIMARY_COLOR, fontFamily: theme.FONT_FAMILY, fontSize: theme.FONT_SIZE_LARGE, fontWeight: "normal"}}
+        />
+        {
+          (!this.state.loading)?this._renderPost():null
+        }
       </SafeAreaView>
     );
   }

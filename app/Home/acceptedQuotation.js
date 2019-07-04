@@ -1,20 +1,14 @@
 import React, {Component} from 'react'
-import {Text, View, SafeAreaView, Image, ScrollView, TouchableOpacity} from 'react-native'
-import {Divider} from 'react-native-paper'
-import {Actions} from 'react-native-router-flux'
+import {Text, View} from 'react-native'
 import firebase from 'react-native-firebase'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import theme from '../styles/theme.style'
 import styles from '../styles/component.style'
-import {DateFormat} from '../helpers/DateFormat'
-import {Appbar} from 'react-native-paper'
 
 export default class AcceptedQuotation extends Component {
   constructor(props) {
     super(props)
-    this.unsubscribeQuotationsAccepted = null
-    this.unsubscribeChatAccepted = null
-    this.refQuotations = firebase.firestore().collection('quotation').doc(this.props.quotationId);
+    this.refQuotations = firebase.firestore().collection('quotation').doc(this.props.quotationId)
     this.refChatCollection = this.refQuotations.collection('chat').orderBy('send_datetime')
     
     this.state = {
@@ -32,12 +26,12 @@ export default class AcceptedQuotation extends Component {
   }
 
   componentWillUnmount() {
-    this.unsubscribeQuotationsAccepted();
-    this.unsubscribeChatAccepted();
+    this.unsubscribeQuotationsAccepted()
+    this.unsubscribeChatAccepted()
   }
 
   _onChatUpdate = (chatsCollection) => {
-    var chats = [];
+    var chats = []
     chatsCollection.forEach((chat) => {
       var data = chat.data();
       chats.push({
@@ -48,7 +42,7 @@ export default class AcceptedQuotation extends Component {
       });
     });
     this.setState({
-      chats: chats
+      chats: chats,
     })
   }
 
@@ -71,7 +65,7 @@ export default class AcceptedQuotation extends Component {
       this.setState({
         quotation: quotation,
         loading: false,
-        chatSender: chatSender
+        chatSender: chatSender,
       })
     })
   }
@@ -80,7 +74,7 @@ export default class AcceptedQuotation extends Component {
     let quotation = this.state.quotation[0]
     let chatsDisplay = (this.state.chats.length > 0 && this.state.chatSender !== '')?this.state.chats.map((chat, key) => {
       return (
-        <View key={'chat'+key} style={{width: '100%', margin: 10}}>
+        <View key={'chat'+key} style={{width: '100%', marginBottom: 10}}>
           {(this.state.chatSender === chat.sender)?
           <View style={{width: '100%', alignItems: 'flex-end'}}>
             <View style={{width: '65%', borderRadius: 20, backgroundColor:theme.PRIMARY_COLOR, borderTopEndRadius: 0, padding: 10, marginRight: 20}}>
@@ -121,6 +115,7 @@ export default class AcceptedQuotation extends Component {
           </View>:null
           }
         </View>
+        <View><Text style={[{paddingLeft: 10, textAlign:'center', width:'100%'}, styles.textHeader]}>พูดคุยกับ REFUN MAN</Text></View>
         <View style={{flex: 1, widht: '100%', margin: 10}}>{chatsDisplay}</View>
       </View>
     )

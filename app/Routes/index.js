@@ -11,6 +11,7 @@ import ConfirmedDetail from '../Post/confirmedDetail';
 import PostDetail from '../Home/postDetail';
 import QuotationDetail from '../Quotation/detail';
 import CompareQuotation from '../Quotation/compare';
+import ReceiptDetail from '../Receipt'
 
 const Routes = () => (
    <Router>
@@ -24,6 +25,7 @@ const Routes = () => (
             <Scene key='postdetail' component={PostDetail} hideNavBar />
             <Scene key='quotationdetail' component={QuotationDetail} hideNavBar />
             <Scene key='comparequotation' component={CompareQuotation} hideNavBar />
+            <Scene key='receiptdetail' component={ReceiptDetail} hideNavBar />
          </Stack>
          <Scene key='pinmap' component={PinMap} hideNavBar />
          <Scene key='categoryselect' component={CategorySelect} hideNavBar />

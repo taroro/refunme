@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Text, View, SafeAreaView, Image, ScrollView, TouchableOpacity, TextInput} from 'react-native'
-import {Divider} from 'react-native-paper'
+import {Divider, Button} from 'react-native-paper'
 import {Actions} from 'react-native-router-flux'
 import firebase from 'react-native-firebase'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -11,6 +11,7 @@ import {Appbar} from 'react-native-paper'
 import WaitingQuotation from '../Home/waitingQuotation'
 import AcceptedQuotation from '../Home/acceptedQuotation'
 import moment from 'moment';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export default class PostDetail extends Component {
   constructor(props) {
@@ -28,6 +29,9 @@ export default class PostDetail extends Component {
       message: '',
       chatSender: '',
       refunManId: '',
+      quotationId: '',
+      quotationStatus: 0,
+      receiptId: '',
     }
   }
 
@@ -79,13 +83,31 @@ export default class PostDetail extends Component {
           this.setState({
             chatSender: quotation.data().refunme_id,
             refunManId: quotation.data().refunman_id,
+            quotationId: quotation.id,
+            quotationStatus: quotation.data().status,
           })
         })
       }
       resolve('ok');
     });
 
-    Promise.all([promiseItems, promisePhotos, promiseQuotation]).then(([items, photos, quotation]) => {
+    var promiseReceipt = new Promise((resolve, reject) => {
+      firebase.firestore().collection('receipt').where('post_id', '==', this.props.postId).get().then((receiptCollection) => {
+        var receipts = [];
+        receiptCollection.forEach((receipt) => {
+          var data = receipt.data()
+          receipts.push({
+            id: receipt.id,
+          })
+          this.setState({
+            receiptId: receipt.id
+          })
+        });
+        resolve(receipts);
+      });
+    })
+
+    Promise.all([promiseItems, promisePhotos, promiseQuotation, promiseReceipt]).then(([items, photos, quotation, receipt]) => {
       this.setState({
         postDetail: {
           id: postSnapshot.id,
@@ -118,7 +140,7 @@ export default class PostDetail extends Component {
     Actions.pop();
   }
 
-  _sendMessage() {
+  _sendMessage = () => {
     firebase.firestore().collection('quotation').doc(this.state.postDetail.acceptedQuotation).collection('chat').add({
       message: this.state.message,
       send_datetime: moment(new Date()).format('DD/MM/YYYY HH:mm:ss'),
@@ -131,8 +153,28 @@ export default class PostDetail extends Component {
     })
   }
 
-  _sendLocation() {
+  _closeDeal = () => {
+    var postId = this.state.postId
+    firebase.firestore().collection('post').doc(postId).update({
+      status: 3,
+      close_datetime: moment(new Date()).format('DD/MM/YYYY HH:mm:ss'),
+    }).then((doc) => {
+      firebase.firestore().collection('quotation').doc(this.state.postDetail.acceptedQuotation).update({
+        status: 5,
+        close_datetime: moment(new Date()).format('DD/MM/YYYY HH:mm:ss'),
+      })
+    }).then((doc) => {
+      Actions.home()
+    })
+  }
 
+  _sendLocation = () => {
+  }
+
+  _detailReceipt = () => {
+    Actions.receiptdetail({
+      receiptId: this.state.receiptId
+    })
   }
 
   render() {
@@ -180,6 +222,12 @@ export default class PostDetail extends Component {
           </Appbar.Header>
         </View>
         <View style={{flex: 1}}>
+          <Spinner
+            visible={this.state.loading}
+            animation={'fade'}
+            textContent={'รอสักครู่...'}
+            textStyle={{color:theme.PRIMARY_COLOR, fontFamily: theme.FONT_FAMILY, fontSize: theme.FONT_SIZE_LARGE, fontWeight: "normal"}}
+          />
           <ScrollView>
             {(postDetail)?
             <View style={{marginTop: 20, marginLeft: 15, marginRight: 15}}>
@@ -228,27 +276,46 @@ export default class PostDetail extends Component {
             </View>:null
             }
           </ScrollView>
-          {(status == 2)?
-            <View style={{padding: 10, backgroundColor: theme.BACKGROUND_SECONDARY_COLOR, flexDirection: 'row', height: 60}}>
-              <View style={{width: 40, alignItems: 'center', justifyContent: 'center'}}>
-                <TouchableOpacity onPress={() => this._sendLocation}>
-                  <Icon name='add-location' size={30} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
-                </TouchableOpacity>
-              </View>
-              <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
-                <TextInput
-                  style={{height:40, borderWidth: 1, borderColor: theme.COLOR_GREY, borderRadius:10, width: '100%', backgroundColor: theme.COLOR_WHITE, paddingLeft:10, paddingRight:10,}}
-                  onChangeText={(message) => this.setState({message})}
-                  value={this.state.message}
-                  autoFocus
-                />
-              </View>
-              <View style={{width: 40, alignItems: 'center', justifyContent: 'center'}}>
-                <TouchableOpacity onPress={() => this._sendMessage()}>
-                  <Icon name='send' size={30} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
-                </TouchableOpacity>
-              </View>
-            </View>:null
+          {(status == 2 && this.state.quotationStatus == 2)?
+          <View style={{padding: 10, backgroundColor: theme.BACKGROUND_SECONDARY_COLOR, flexDirection: 'row', height: 60}}>
+            <View style={{width: 40, alignItems: 'center', justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => this._sendLocation}>
+                <Icon name='add-location' size={30} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
+              </TouchableOpacity>
+            </View>
+            <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+              <TextInput
+                style={{height:40, borderWidth: 1, borderColor: theme.COLOR_GREY, borderRadius:10, width: '100%', backgroundColor: theme.COLOR_WHITE, paddingLeft:10, paddingRight:10,}}
+                onChangeText={(message) => this.setState({message})}
+                value={this.state.message}
+                autoFocus
+              />
+            </View>
+            <View style={{width: 40, alignItems: 'center', justifyContent: 'center'}}>
+              <TouchableOpacity onPress={() => this._sendMessage()}>
+                <Icon name='send' size={30} backgroundColor={theme.COLOR_WHITE} color={theme.PRIMARY_COLOR} />
+              </TouchableOpacity>
+            </View>
+          </View>:null
+          }
+          {(this.state.quotationStatus == 3)?
+          <View style={{marginTop: 10, marginLeft: 15, marginRight: 15, marginBottom: 10, backgroundColor: theme.PRIMARY_COLOR, alignItems: "center"}}>
+            <Text style={[styles.textSmall, {padding: 10, color: theme.COLOR_WHITE, justifyContent: 'center', textAlign: 'center', width: '100%'}]}>การรับซื้อได้เสร็จสิ้นเรียบร้อย</Text>
+            <Button icon="event-note" mode="contained" color={theme.COLOR_LIGHTGREY} dark={false} onPress={this._detailReceipt} style={{width: "80%", marginBottom: 10}}>
+              <Text style={{fontSize: 18, textAlign: "center", fontFamily: theme.FONT_FAMILY, width: "80%", color: theme.COLOR_DARKGREY}}>ใบรายการรับซื้อ</Text>
+            </Button>
+            <Button icon="check-circle" mode='contained' color={theme.COLOR_LIGHTGREY} dark={false} onPress={this._closeDeal} style={{width: "80%", marginBottom: 10}}>
+              <Text style={{fontSize: 18, textAlign: 'center', fontFamily: theme.FONT_FAMILY, color: theme.COLOR_DARKGREY, width: '80%'}}>เสร็จสิ้นการขาย</Text>
+            </Button>
+          </View>:null
+          }
+          {(this.state.quotationStatus == 5)?
+          <View style={{marginTop: 10, marginLeft: 15, marginRight: 15, marginBottom: 10, backgroundColor: theme.PRIMARY_COLOR, alignItems: "center"}}>
+            <Text style={[styles.textSmall, {padding: 10, color: theme.COLOR_WHITE, justifyContent: 'center', textAlign: 'center', width: '100%'}]}>การรับซื้อได้เสร็จสิ้นเรียบร้อย</Text>
+            <Button icon="event-note" mode="contained" color={theme.COLOR_LIGHTGREY} dark={false} onPress={this._detailReceipt} style={{width: "80%", marginBottom: 10}}>
+              <Text style={{fontSize: 18, textAlign: "center", fontFamily: theme.FONT_FAMILY, width: "80%", color: theme.COLOR_DARKGREY}}>ใบรายการรับซื้อ</Text>
+            </Button>
+          </View>:null
           }
         </View>
       </SafeAreaView>
